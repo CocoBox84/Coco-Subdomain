@@ -46,12 +46,6 @@
     animation-duration: 500ms;
 }
 
-@supports (display: flex) {
-    .header {
-        display: flex !important;
-    }
-}
-
 @supports (backdrop-filter: blur(1px)) {
     .header {
         background-color: rgba(211, 211, 211, 0.253) !important;
