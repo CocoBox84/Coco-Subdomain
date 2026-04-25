@@ -1,18 +1,20 @@
 // SubdomainForeignConnection.js
 
+const CocoUrl = `https://www.cocoink.ink`;
+
 class SubdomainForeignConnection {
     constructor(name) {
         // Example: name = "xPaint"
         this.name = name;
 
         // Backend endpoint for this foreign module
-        this.base = `https://www.cocoink.ink/f/${name}`;
+        this.base = `${CocoUrl}/f/${name}`;
     }
 
     // Generic GET request
     async get(path, usebase=false) {
         try {
-            const url = !usebase ? `${this.base}${path}` : `https://www.cocoink.ink${path}`;
+            const url = !usebase ? `${this.base}${path}` : `${CocoUrl}${path}`;
 
             const res = await fetch(url, {
                 method: "GET",
@@ -59,7 +61,7 @@ class SubdomainForeignConnection {
         }
 
         // Not logged in → redirect to main site login
-        window.location.href = "https://www.cocoink.ink/login?redirect=" + encodeURIComponent(window.location.href);
+        window.location.href = `${CocoUrl}/login?redirect=${encodeURIComponent(window.location.href)}`;
     }
 
     async isLoggedIn() {
