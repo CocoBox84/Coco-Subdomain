@@ -1,6 +1,6 @@
 // SubdomainForeignConnection.js
 
-const CocoUrl = `https://www.cocoink.ink`;
+const CocoUrl = (true) ? `https://www.cocoink.ink` : "http://127.0.0.1:5500";
 
 class SubdomainForeignConnection {
     constructor(name) {
@@ -18,14 +18,23 @@ class SubdomainForeignConnection {
 
             const res = await fetch(url, {
                 method: "GET",
-                credentials: "include", // IMPORTANT: send 
-                headers: {
-                    "Access-Control-Allow-Origin": "*"
-                }
+                credentials: "include" // IMPORTANT: send 
             });
 
-            return res.json();
-        } catch {
+            const responseText = await res.text();
+
+            console.log(responseText);
+
+            if (responseText === "Not logged in") {
+                console.log("Nof user");
+                return null;
+            }
+
+            console.log("Continue");
+
+            return JSON.parse(responseText);
+        } catch (e) {
+            console.log(e);
             return null;
         }
     }
@@ -39,8 +48,7 @@ class SubdomainForeignConnection {
                 method: "POST",
                 credentials: "include",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
             });
