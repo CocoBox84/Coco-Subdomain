@@ -1,8 +1,16 @@
 // SubdomainForeignConnection.js
 
-const CocoUrl = (true) ? `https://www.cocoink.ink` : "http://127.0.0.1:5500";
+// Why have more then one backend? I can't afford any more.
+// So for any Coco subdomains, we connect through the main Coco backend, through
+// this frontend.
+
+const CocoUrl = (document.location.host == "xpaint.cocoink.ink") ? `https://www.cocoink.ink` : "http://127.0.0.1:5500";
+console.log(document.location.host);
 
 class SubdomainForeignConnection {
+
+    static connector = this;
+
     constructor(name) {
         // Example: name = "xPaint"
         this.name = name;
@@ -11,10 +19,15 @@ class SubdomainForeignConnection {
         this.base = `${CocoUrl}/f/${name}`;
     }
 
+    static createSubdomain() {
+        return new this();
+    }
+
     // Generic GET request
     async get(path, usebase=false) {
         try {
             const url = !usebase ? `${this.base}${path}` : `${CocoUrl}${path}`;
+            console
 
             const res = await fetch(url, {
                 method: "GET",
@@ -35,6 +48,7 @@ class SubdomainForeignConnection {
             return JSON.parse(responseText);
         } catch (e) {
             console.log(e);
+            if (path == "/api/whoami") return "fail";
             return null;
         }
     }
@@ -74,6 +88,8 @@ class SubdomainForeignConnection {
 
     async isLoggedIn() {
         const result = await this.get("/api/whoami", true);
+
+        if (result == "fail") return result;
 
         if (result?.id) {
             this.userId = result.id;
